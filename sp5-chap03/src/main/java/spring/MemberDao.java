@@ -1,5 +1,6 @@
 package spring;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 // 원래는 DB를 연동해야하는 클래스 이다. 
@@ -19,5 +20,9 @@ public class MemberDao {
 	
 	public void update(Member member) {
 		map.put(member.getEmail(), member);
+	}
+
+	public Collection<Member> selectAll() {
+		return map.values();
 	}
 }

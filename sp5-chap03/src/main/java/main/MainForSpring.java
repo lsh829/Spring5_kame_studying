@@ -12,10 +12,12 @@ import assembler.Assembler;
 import config.AppCtx;
 import spring.ChangePasswordService;
 import spring.DuplicateMemberException;
+import spring.MemberInfoPrinter;
 import spring.MemberNotFoundException;
 import spring.MemberRegisterService;
 import spring.RegisterRequest;
 import spring.WrongIdPasswordException;
+import spring.MemberListPrinter;
 
 public class MainForSpring {
 	private static ApplicationContext ctx = null;
@@ -43,11 +45,34 @@ public class MainForSpring {
 			} else if (command.startsWith("change ")) {
 				processChangeCommand(command.split(" "));
 				continue;
+			} else if (command.equals("list")) { //추가한 부분 : list 동작이 제대로 되는지 확인하기 위해 
+				processListCommand();
+				continue;
+			} else if (command.startsWith("info ")) { // 오류나서 해결
+				processInfoCommand(command.split(" ")); // 오류나서 해결
+				continue;
 			}
 			printHelp();
 		}
 	}//main() end 
 
+	// 추가한 부분 : "list" 명령이 잘 수행되는지 확인하기 위한 메소드 
+	private static void processListCommand() {
+		MemberListPrinter listPrinter = ctx.getBean("listPrinter", MemberListPrinter.class);
+		listPrinter.printAll();
+		
+	}
+	
+	private static void processInfoCommand(String[] arg) {
+		if(arg.length!=2) {
+			printHelp();
+			return;
+		}
+
+		MemberInfoPrinter infoPrinter = ctx.getBean("infoPrinter",MemberInfoPrinter.class);
+		infoPrinter.printMemberInfo(arg[1]);
+		
+	}
 	// Assembler를 사용하는 코드 
 	private static Assembler assembler = new Assembler();
 
